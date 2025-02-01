@@ -1,16 +1,18 @@
-async function run() {
-  const response = await fetch('./config.json');
-  const json = await response.json();
-  Object.entries(json).forEach(([key, value]) => {
-    const el = document.querySelector(`#${key}`);
-    if (el) {
-      el.textContent = value;
-    } else {
-      console.warn(`Element with id : ${key} not found ...`);
+async function initialize() {
+  try {
+    const configData = await fetch('./config.json').then(res => res.json());
+
+    for (const [id, content] of Object.entries(configData)) {
+      const element = document.getElementById(id);
+      if (element) {
+        element.textContent = content;
+      } else {
+        console.warn(`Elemento com ID: ${id} não encontrado.`);
+      }
     }
-  });
+  } catch (error) {
+    console.error('Erro ao carregar configuração:', error);
+  }
 }
 
-run().catch((err) => {
-  console.error(err);
-});
+initialize();
